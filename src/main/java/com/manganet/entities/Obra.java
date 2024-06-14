@@ -1,31 +1,69 @@
 package com.manganet.entities;
 
+import java.time.LocalDate;
 import java.util.List;
 
-import lombok.Data;
-
-import com.manganet.model.Demografia;
-import com.manganet.model.Genero;
-import com.manganet.model.TipoObra;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.Data;
 
-@Entity
 @Data
+@Entity
 public class Obra {
-
+	
 	@Id
-    private String id;
-    private String titulo;
-    private String descripcion;
-    private TipoObra tipo;
-    private List<Genero> generos;
-    private String estado;
-    private String imagen;
-    private int likes;
-    private int dislikes;
-    private double rating;
-    private Demografia demografia;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+	
+	private String nombre;
+	
+	@Temporal(TemporalType.DATE)
+	private LocalDate fechaLanzamiento;
     
+	private String descripcion;
+    
+	@ManyToOne
+	@JoinColumn(name = "tipo_id")
+	private Tipo tipo;
+    
+	@ManyToOne
+	@JoinColumn(name = "estado_id")
+	private Estado estado;
+    
+	private String imagen;
+    
+	private int likes;
+    
+	private int dislikes;
+    
+	@ManyToOne
+	@JoinColumn(name = "demografia_id")
+	private Demografia demografia;
+	
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(
+			name = "favorito",
+			joinColumns = @JoinColumn(name = "obra_id"),
+			inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+	private List<Usuario> usuarios;
+	
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(
+			name = "asignaciones_generos",
+			joinColumns = @JoinColumn(name = "obra_id"),
+			inverseJoinColumns = @JoinColumn(name = "genero_id"))
+	private List<Genero> generos;
+	
 }

@@ -1,6 +1,6 @@
 package com.manganet.model;
 
-import java.util.List;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,15 +9,15 @@ import lombok.Data;
 @AllArgsConstructor
 public class ObraDTO {
 	
-	private int id;
-	private String titulo;
+	private Integer id;
+	private String nombre;
+	private LocalDate fechaLanzamiento;
     private String descripcion;
-    private TipoObra tipo;
-    private List<Genero> generos;
-    private String estado;
+    private TipoDTO tipo;
+    private EstadoDTO estado;
     private String imagen;
     private int likes;
     private int dislikes;
-    private Demografia demografia;
-	
+    private DemografiaDTO demografia;
+    
 }

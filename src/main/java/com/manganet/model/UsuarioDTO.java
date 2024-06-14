@@ -7,9 +7,11 @@ import lombok.Data;
 @AllArgsConstructor
 public class UsuarioDTO {
 	
-	private int id;
+	private Integer id;
     private String username;
+    private String nombre;
     private String email;
-    private String firebaseUid;
+    private String password;
+    private String salt;
     
 }
