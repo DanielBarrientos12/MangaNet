@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +29,7 @@ public class Obra {
 	private String nombre;
 	
 	@Temporal(TemporalType.DATE)
+	@Column(name = "fecha_lanzamiento")
 	private LocalDate fechaLanzamiento;
     
 	private String descripcion;

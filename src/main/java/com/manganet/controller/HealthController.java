@@ -4,15 +4,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
 @RestController
-@RequestMapping("/mangas")
+@RequestMapping("/hello-world")
 public class HealthController {
 	
-	@GetMapping("/hello-world")
+	@GetMapping
 	public String getStatus() {
 		return "Hello World";
 	}
 	
-
 }

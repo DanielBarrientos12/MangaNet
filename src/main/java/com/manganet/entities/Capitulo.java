@@ -26,6 +26,7 @@ public class Capitulo {
 	private String titulo;
 	
 	@Temporal(TemporalType.DATE)
+	@Column(name = "fecha_publicacion")
 	private LocalDate fechaPublicacion;
     
 	@ManyToOne

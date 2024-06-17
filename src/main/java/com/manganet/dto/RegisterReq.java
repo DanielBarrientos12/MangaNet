@@ -1,17 +1,19 @@
-package com.manganet.model;
+package com.manganet.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
-public class UsuarioDTO {
+@NoArgsConstructor
+public class RegisterReq {
 	
-	private Integer id;
-    private String username;
+	private String username;
     private String nombre;
     private String email;
     private String password;
-    private String salt;
-    
+
 }
