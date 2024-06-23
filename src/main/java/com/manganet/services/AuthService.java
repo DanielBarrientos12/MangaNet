@@ -3,11 +3,7 @@ package com.manganet.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.manganet.dto.AuthResponse;
@@ -17,62 +13,47 @@ import com.manganet.dto.Role;
 import com.manganet.entities.Usuario;
 import com.manganet.repositories.UserRepository;
 
-import lombok.AllArgsConstructor;
-
 @Service
-@AllArgsConstructor
 public class AuthService {
 
-    @Autowired
-    private final UserRepository userRepository;
+	@Autowired
+	public UserRepository userRepository;
 
-    @Autowired
-    private final PasswordEncoder passwordEncoder;
+	public ResponseEntity<?> register(RegisterReq request) {
+		Optional<Usuario> userFound = userRepository.findByEmail(request.getEmail());
 
-    @Autowired
-    private final JwtService jwtService;
+		if (userFound.isPresent()) {
+			throw new IllegalStateException("El usuario ya existe");
+		}
 
-    @Autowired
-    private final AuthenticationManager authenticationManager;
+		Usuario user = new Usuario();
+		user.setNombre(request.getNombre());
+		user.setEmail(request.getEmail());
+		user.setPassword(request.getPassword());
+		user.setUsername(request.getUsername());
+		user.setRole(Role.USER);
 
-    public AuthResponse login(LoginReq request) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
+		userRepository.save(user);
 
-            Usuario user = (Usuario) authentication.getPrincipal();
-            String token = jwtService.generateToken(user);
-
-            return AuthResponse.builder()
-                    .email(user.getEmail())
-                    .token(token)
-                    .build();
-        } catch (AuthenticationException e) {
-            throw new IllegalStateException("Invalid credentials");
-        }
-    }
-
-    public AuthResponse register(RegisterReq request) {
-        Optional<Usuario> userFound = userRepository.findByEmail(request.getEmail());
-
-        if (userFound.isPresent()) {
-            throw new IllegalStateException("El usuario ya existe");
-        }
-
-        Usuario user = Usuario.builder()
-                .username(request.getUsername())
-                .nombre(request.getNombre())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
-                .build();
-
-        userRepository.save(user);
-
-        return AuthResponse.builder()
-                .email(user.getEmail())
-                .token(jwtService.generateToken(user))
-                .build();
-    }
+		return ResponseEntity.ok(user);
+	}
+	
+	public AuthResponse login(LoginReq request) {
+		try {
+			Optional<Usuario> userOpt = userRepository.findByEmail(request.getEmail());
+			
+			if (userOpt.isPresent() && userOpt.get().getPassword().equals(request.getPassword())) {
+				AuthResponse response = AuthResponse.builder()
+						.username(userOpt.get().getUsername())
+						.token("1234567")
+						.build();
+				return response;
+			} else {
+				throw new Exception("Invalid credentials");
+			}
+			
+		} catch (Exception e) {
+			throw new IllegalStateException("An error has ocurred");
+		}
+	}
 }
