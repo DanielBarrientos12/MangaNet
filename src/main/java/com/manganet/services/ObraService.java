@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.manganet.dto.ObraDTO;
 import com.manganet.entities.Demografia;
 import com.manganet.entities.Estado;
+import com.manganet.entities.Genero;
 import com.manganet.entities.Obra;
 import com.manganet.entities.Tipo;
 import com.manganet.repositories.DemografiaRepository;
@@ -34,9 +35,14 @@ public class ObraService {
 	public DemografiaRepository demografiaRepository;
 	
 	@Autowired
+	public GeneroService generoService;
+	
+	@Autowired
     public FileService fileService;
 
 	public Obra createObra(ObraDTO obraDto, MultipartFile imagen) throws IOException {
+		
+		//busco si existe sino da una excepcion
 		Optional<Obra> obraOpt = obraRepository.findByNombre(obraDto.getNombre());
 
 		if (obraOpt.isPresent()) {
@@ -50,13 +56,17 @@ public class ObraService {
 		Demografia demografia = demografiaRepository.findById(obraDto.getDemografiaId())
 				.orElseThrow(() -> new RuntimeException("'Demografia' does not exist"));
 
-		String location = normalizeString(obraDto.getNombre());
 		
+		//nomalizo el nombre y para volverlo el nombre de la carpeta donde se guardaran los archivos
+		String location = normalizeString(obraDto.getNombre());
 		String imagePath = fileService.storeFile(imagen, location);
+		
+		//busco los generos que se van a agregar
+		List<Genero> generos = generoService.searchGenresById(obraDto.getGeneros());
 
 		Obra obra = Obra.builder().nombre(obraDto.getNombre()).fechaLanzamiento(obraDto.getFechaLanzamiento())
 				.descripcion(obraDto.getDescripcion()).tipo(tipo).estado(estado).imagen(imagePath)
-				.demografia(demografia).build();
+				.demografia(demografia).generos(generos).build();
 
 		return obraRepository.save(obra);
 	}
