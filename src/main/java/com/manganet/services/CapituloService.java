@@ -2,6 +2,7 @@ package com.manganet.services;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,5 +52,19 @@ public class CapituloService {
 	public static String normalizeString(String string) {
 		return string.toLowerCase().replaceAll("\\s+", "");
 	}
+
+	public List<Capitulo> listCapitulosObra(Integer id) {
+		return capituloRepository.findByObraId(id);
+	}
+	
+	public Capitulo getCapituloByObraAndNumero(Integer obraId, Double numero) {
+        Optional<Capitulo> capituloOpt = capituloRepository.findByObraIdAndNumero(obraId, numero);
+        
+        if (capituloOpt.isEmpty()) {
+            throw new RuntimeException("Capítulo no encontrado para la obra ID " + obraId + " y número de capítulo " + numero);
+        }
+        
+        return capituloOpt.get();
+    }
 
 }
