@@ -11,10 +11,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.Builder;
 import lombok.Data;
 
-@Entity
 @Data
+@Builder
+@Entity
 public class Capitulo {
 	
 	@Id
@@ -28,7 +30,7 @@ public class Capitulo {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha_publicacion")
 	private LocalDate fechaPublicacion;
-    
+	
 	@ManyToOne
 	@JoinColumn(name = "obra_id")
 	private Obra obra;

@@ -56,7 +56,7 @@ public class ObraController {
 			"Obras" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Lista de obras obtenida exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Obra.class))), })
-	@GetMapping()
+	@GetMapping
 	public List<Obra> listarObra() {
 		return obraService.listObras();
 	}

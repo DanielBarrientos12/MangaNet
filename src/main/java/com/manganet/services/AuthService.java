@@ -11,13 +11,13 @@ import com.manganet.dto.LoginReq;
 import com.manganet.dto.RegisterReq;
 import com.manganet.dto.Role;
 import com.manganet.entities.Usuario;
-import com.manganet.repositories.UserRepository;
+import com.manganet.repositories.UsuarioRepository;
 
 @Service
 public class AuthService {
 
 	@Autowired
-	public UserRepository userRepository;
+	public UsuarioRepository userRepository;
 
 	public ResponseEntity<?> register(RegisterReq request) {
 		Optional<Usuario> userFound = userRepository.findByEmail(request.getEmail());

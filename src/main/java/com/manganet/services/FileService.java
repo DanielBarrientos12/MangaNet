@@ -31,7 +31,9 @@ public class FileService {
         return filePath.toString();
     }
 
-    public void storeMultipleFiles(MultipartFile[] files, String ubicacion) throws IOException {
+    public List<String> storeMultipleFiles(List<MultipartFile> files, String ubicacion) throws IOException {
+    	List<String> paths = new ArrayList<String>();
+    
         Path directoryPath = Paths.get(FILE_DIRECTORY + "/" + ubicacion);
         if (!Files.exists(directoryPath)) {
             Files.createDirectories(directoryPath);
@@ -39,7 +41,9 @@ public class FileService {
         for (MultipartFile file : files) {
             Path filePath = directoryPath.resolve(file.getOriginalFilename());
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            paths.add(filePath.toString());
         }
+        return paths;
     }
 
     public Resource loadFile(String filename, String ubicacion) {
