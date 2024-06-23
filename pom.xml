@@ -7,12 +7,11 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.1</version>
-		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.empresa</groupId>
 	<artifactId>manga_net</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>manga_net</name>
+	<name>MangaNet</name>
 	<description>Project for reading and uploading ‘mangas, manhuas, manhwas’.</description>
 	<properties>
 		<java.version>21</java.version>
@@ -51,7 +50,6 @@
 		</dependency>
 
 
-
 		<!-- Dependencia swagger -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -59,24 +57,11 @@
 			<version>2.2.0</version>
 		</dependency>
 
-		<!-- dependencias de jjwt -->
 		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
-			<version>0.12.5</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-impl</artifactId>
-			<version>0.12.5</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-jackson</artifactId>
-			<version>0.12.5</version>
-			<scope>runtime</scope>
-		</dependency>
+
 
 	</dependencies>
 
