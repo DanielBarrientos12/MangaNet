@@ -46,9 +46,9 @@ public class FileService {
         return paths;
     }
 
-    public Resource loadFile(String filename, String ubicacion) {
+    public Resource loadFile(String filename) {
         try {
-            Path file = rootLocation.resolve(ubicacion + "/" + filename);
+            Path file = rootLocation.resolve(filename);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;

@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 import com.manganet.dto.ObraDTO;
+import com.manganet.dto.ResponseObra;
 import com.manganet.entities.Obra;
 import com.manganet.services.ObraService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,7 +58,7 @@ public class ObraController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Lista de obras obtenida exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Obra.class))), })
 	@GetMapping
-	public List<Obra> listarObra() {
+	public List<ResponseObra> listarObra() {
 		return obraService.listObras();
 	}
 
@@ -68,7 +69,7 @@ public class ObraController {
 			@ApiResponse(responseCode = "200", description = "Obra obtenida exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Obra.class))),
 			@ApiResponse(responseCode = "404", description = "Obra no encontrada", content = @Content) })
 	@GetMapping("/{id}")
-	public Obra getObra(
+	public ResponseObra getObra(
 			@Parameter(description = "ID de la obra a ser obtenida", required = true) @PathVariable Integer id) {
 		return obraService.getObra(id);
 	}

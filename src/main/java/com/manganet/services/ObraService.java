@@ -1,14 +1,20 @@
 package com.manganet.services;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.nio.file.Path;
+import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
 
 import com.manganet.dto.ObraDTO;
+import com.manganet.dto.ResponseObra;
 import com.manganet.entities.Demografia;
 import com.manganet.entities.Estado;
 import com.manganet.entities.Genero;
@@ -71,23 +77,79 @@ public class ObraService {
 		return obraRepository.save(obra);
 	}
 
-	public List<Obra> listObras() {
-		return obraRepository.findAll();
+	public List<ResponseObra> listObras() {
+	    List<Obra> obras = obraRepository.findAll();
+	    List<ResponseObra> responseObras = new ArrayList<>();
+
+	    for (Obra obra : obras) {
+	        Resource file = fileService.loadFile(obra.getImagen());
+	        String base64Image = encodeFileToBase64(file);
+
+	        ResponseObra obraDto = ResponseObra.builder()
+	                .id(obra.getId())
+	                .nombre(obra.getNombre())
+	                .fechaLanzamiento(obra.getFechaLanzamiento())
+	                .descripcion(obra.getDescripcion())
+	                .tipo(obra.getTipo())
+	                .estado(obra.getEstado())
+	                .imagen(base64Image) // Agrega la imagen convertida a Base64
+	                .likes(obra.getLikes())
+	                .dislikes(obra.getDislikes())
+	                .demografia(obra.getDemografia())
+	                .usuarios(obra.getUsuarios())
+	                .generos(obra.getGeneros())
+	                .build();
+
+	        responseObras.add(obraDto);
+	    }
+
+	    return responseObras;
 	}
 
-	public Obra getObra(Integer id) {
+
+	public ResponseObra getObra(Integer id) {
 
 		Optional<Obra> obraOpt = obraRepository.findById(id);
 		if (obraOpt.isEmpty()) {
 			return null;
 		}
+		
+		Obra obra = obraOpt.get();
+		
+		Resource file = fileService.loadFile(obra.getImagen());
+        String base64Image = encodeFileToBase64(file);
 
-		return obraOpt.get();
+		
+        ResponseObra obraDto = ResponseObra.builder()
+                .id(obra.getId())
+                .nombre(obra.getNombre())
+                .fechaLanzamiento(obra.getFechaLanzamiento())
+                .descripcion(obra.getDescripcion())
+                .tipo(obra.getTipo())
+                .estado(obra.getEstado())
+                .imagen(base64Image) // Agrega la imagen convertida a Base64
+                .likes(obra.getLikes())
+                .dislikes(obra.getDislikes())
+                .demografia(obra.getDemografia())
+                .usuarios(obra.getUsuarios())
+                .generos(obra.getGeneros())
+                .build();
+
+
+		return obraDto;
 	}
 	
 	public static String normalizeString(String string) {
 	    return string.toLowerCase().replaceAll("\\s+", "");
 	}
 
-
+	private String encodeFileToBase64(Resource resource) {
+	    try {
+	        byte[] fileContent = Files.readAllBytes(Path.of(resource.getURI()));
+	        return Base64.getEncoder().encodeToString(fileContent);
+	    } catch (IOException e) {
+	        throw new RuntimeException("Error converting file to Base64", e);
+	    }
+	}
+	
 }
